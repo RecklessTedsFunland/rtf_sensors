@@ -28,8 +28,8 @@ class rtf_lis3mdl(Node):
         self.lis = adafruit_lis3mdl.LIS3MDL(self.i2c) # 155 Hz, 4 gauss, continuous
         self.lis.data_rate = adafruit_lis3mdl.Rate.RATE_155_HZ
 
-        self.timer_mag  = self.create_timer(1/10, self.callback)
-        self.pub_mag = self.create_publisher(MagneticField, 'mag', 10)
+        self.timer_mag  = self.create_timer(1/100, self.callback)
+        self.pub_mag = self.create_publisher(MagneticField, 'magnetic', 10)
 
         self.mags_bias = self.declare_parameter('mags_bias', [0.,0.,0.])
 

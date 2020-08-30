@@ -33,7 +33,8 @@ setup(
         'console_scripts': [
             'i2c_imu = rtf_sensors.imu_serial_node:main',
             'i2c_cal_imu = rtf_sensors.imu_calibration_node:main',
-            'executor_st = rtf_sensors.examples.executor_st:main'
+            'executor_st = rtf_sensors.examples.executor_st:main',
+            'i2c_cal_mag = rtf_sensors.imu_cal_mag_node:main'
         ],
     },
 )
