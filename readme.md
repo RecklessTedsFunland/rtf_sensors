@@ -31,7 +31,7 @@ else:
 ## To Build
 
 ```
-git clone <repo?
+git clone https://github.com/RecklessTedsFunland/rtf_sensors.git
 colcon build --symlink-install
 source install/setup.bash
 
