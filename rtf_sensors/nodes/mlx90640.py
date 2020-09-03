@@ -14,7 +14,7 @@ from collections import deque
 from colorama import Fore
 from pyftdi.i2c import I2cNackError
 import adafruit_mlx90640
-from rtf_interface import CameraIR
+from rtf_interfaces import ImageIR
 
 
 class rtf_mlx90640(Node):
@@ -44,9 +44,11 @@ class rtf_mlx90640(Node):
         
         self.timer = self.create_timer(1/2, self.callback)
         
-        self.pub_imu = self.create_publisher(CameraIR, 'camera_ir', 10)
-        self.msg = CameraIR()
+        self.pub_imu = self.create_publisher(ImageIR, 'image_ir', 10)
+        self.msg = ImageIR()
         self.msg.header.frame_id = self.declare_parameter('frame_id', "base_imu_link").value
+        self.msg.height = 24 # rows
+        self.msg.width  = 32 # cols
         
     def callback(self):
         try:
