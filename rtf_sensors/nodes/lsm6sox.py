@@ -52,7 +52,7 @@ class rtf_lsm6sox(Node):
         self.timer_imu  = self.create_timer(1/100, self.callback)
 
         if i2c is None:
-            self.i2c = busio.I2C(board.SCL, board.SDA)
+            self.i2c = busio.I2C(board.SCL, board.SDA, frequency=400000)
         else:
             self.i2c = i2c
 
