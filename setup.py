@@ -36,6 +36,7 @@ setup(
             'i2c_cal_imu = rtf_sensors.imu_calibration_node:main',
             'executor_st = rtf_sensors.examples.executor_st:main',
             'camera_ir = rtf_sensors.examples.sensors:camera_ir',
+            'illumination = rtf_sensors.examples.sensors:illumination',
             'i2c_cal_mag = rtf_sensors.imu_cal_mag_node:main'
         ],
     },

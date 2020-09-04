@@ -16,6 +16,23 @@ import rclpy
 import board
 import busio
 from rtf_sensors.nodes.mlx90640 import rtf_mlx90640
+from rtf_sensors.nodes.bh1750 import rtf_bh1750
+
+
+def illumination(args=None):
+    rclpy.init(args=args)
+
+    i2c = busio.I2C(board.SCL, board.SDA, frequency=400000)
+    sensor = rtf_bh1750(i2c)
+    # mag.enable_calibration()
+
+    try:
+        rclpy.spin(sensor)
+    except KeyboardInterrupt:
+        print("bye ...")
+    finally:
+        sensor.destroy_node()
+        rclpy.shutdown()
 
 
 def camera_ir(args=None):
