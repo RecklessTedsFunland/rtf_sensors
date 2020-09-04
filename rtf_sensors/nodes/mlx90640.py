@@ -14,11 +14,11 @@ from collections import deque
 from colorama import Fore
 from pyftdi.i2c import I2cNackError
 import adafruit_mlx90640
-from rtf_interfaces import ImageIR
+from rtf_interfaces.msg import ImageIR
 
 
 class rtf_mlx90640(Node):
-    
+
     pixel_colors = {
         25: f"{Fore.BLACK}\u2588",
         27: f"{Fore.BLUE}\u2588",
@@ -27,9 +27,9 @@ class rtf_mlx90640(Node):
         33: f"{Fore.YELLOW}\u2588",
         35: f"{Fore.RED}\u2588",
     }
-    
-    self.row = deque([f"{Fore.BLACK}\u2588"]*32,32)
-        
+
+    row = deque([f"{Fore.BLACK}\u2588"]*32,32)
+
     def __init__(self, i2c=None):
         super().__init__('rtf_mlx90640')
 
@@ -37,33 +37,36 @@ class rtf_mlx90640(Node):
             self.i2c = busio.I2C(board.SCL, board.SDA, frequency=400000)
         else:
             self.i2c = i2c
-            
+
         self.camera = adafruit_mlx90640.MLX90640(i2c)
         self.camera.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
         self.frame = [0] * 24*32  # replace with deque?
-        
+
         self.timer = self.create_timer(1/2, self.callback)
-        
-        self.pub_imu = self.create_publisher(ImageIR, 'image_ir', 10)
+
+        self.pub = self.create_publisher(ImageIR, 'image_ir', 10)
         self.msg = ImageIR()
         self.msg.header.frame_id = self.declare_parameter('frame_id', "base_imu_link").value
         self.msg.height = 24 # rows
         self.msg.width  = 32 # cols
-        
+
     def callback(self):
         try:
             self.msg.header.stamp = self.get_clock().now().to_msg()
             self.camera.getFrame(self.frame)
+
+            # print(self.frame)
+
             self.msg.data = self.frame
             self.pub.publish(self.msg)
         except ValueError as e:
-            print(e)
+            print(f"{Fore.RED}*** {e} ***{Fore.RESET}")
             # these happen, no biggie - retry
-            continue
+            # continue
         except I2cNackError as e:
-            print(e)
-            continue
-            
+            print(f"{Fore.RED}*** {e} ***{Fore.RESET}")
+            # continue
+
     def scale(self, t):
         """
         Translate an IR pixel temperature into a simple ASCII color code for printing.
@@ -81,7 +84,7 @@ class rtf_mlx90640(Node):
             if t < k:
                 return v
         return f"{Fore.RED}\u2588"
-    
+
     def print(self):
         """
         Print the frame to the command line.
@@ -92,4 +95,3 @@ class rtf_mlx90640(Node):
 
             self.row.append(self.scale(t))
         print(Fore.RESET)
-        

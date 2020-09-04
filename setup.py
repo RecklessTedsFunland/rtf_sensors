@@ -21,6 +21,7 @@ setup(
         'adafruit_circuitpython_lis3mdl',
         'adafruit_circuitpython_lps2x',
         'adafruit_circuitpython_dps310',
+        'adafruit-circuitpython-mlx90640',
         'sensor_msgs'
     ],
     zip_safe=True,
@@ -34,6 +35,7 @@ setup(
             'i2c_imu = rtf_sensors.imu_serial_node:main',
             'i2c_cal_imu = rtf_sensors.imu_calibration_node:main',
             'executor_st = rtf_sensors.examples.executor_st:main',
+            'camera_ir = rtf_sensors.examples.sensors:camera_ir',
             'i2c_cal_mag = rtf_sensors.imu_cal_mag_node:main'
         ],
     },

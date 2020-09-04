@@ -32,7 +32,7 @@ else:
 
 ```
 git clone https://github.com/RecklessTedsFunland/rtf_sensors.git
-colcon build --symlink-install
+colcon build --symlink-install --packages-select rtf_sensors
 source install/setup.bash
 
 # now run an example
