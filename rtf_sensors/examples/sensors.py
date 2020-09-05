@@ -7,10 +7,10 @@
 ##############################################
 
 import os
-if 'BLINKA_MCP2221' in os.environ.keys():
-    pass
-else:
-    os.environ['BLINKA_MCP2221'] = "1"
+#if 'BLINKA_MCP2221' in os.environ.keys():
+#    pass
+#else:
+#    os.environ['BLINKA_MCP2221'] = "1"
 
 import rclpy
 import board
