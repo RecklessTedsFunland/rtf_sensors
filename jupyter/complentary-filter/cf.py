@@ -2,15 +2,16 @@ from math import sqrt, sin, acos
 from squaternion import Quaternion
 
 
-initialized = False
+# initialized = False
 
 def norm(v):
     im = 1.0/sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])
     return (v[0]*im, v[1]*im, v[2]*im,)
 
-def update(a, w, dt):
+def update(a, w, dt, q=None):
     na = norm(a)
-    if not initialized:
+    # if not initialized:
+    if q is None:
         ax, ay, az = na
         if az >= 0.0:
             n = sqrt((az+1)*0.5)
@@ -20,16 +21,17 @@ def update(a, w, dt):
             n = (1-az)*0.5)
             inn = 1.0/(2.0*n)
             q = Quaternion(-ay*inn, n, 0, ax*inn)
-        initalized = True
+        # initalized = True
         return q
 
     # predict quaternion from gyro readings
-    qp = q + 0.5*q*Quaternion(0, w)*dt
+    qp = q + 0.5*q*Quaternion(0, *w)*dt
     qp = qp.normalize
 
     # calculate quaternion from acceleration
     a = .9
-    q = qp*((1.0-a)*Quaternion() + scale(a, quatAcc(na, qp)))
+    # q = qp*((1.0-a)*Quaternion() + scale(a, quatAcc(na, qp)))
+    q = qp*scale(a, quatAcc(na, qp))
     q = q.normalize
     return q
 
