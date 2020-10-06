@@ -49,11 +49,16 @@ gps.send_command(b'PMTK220,1000')  # 1 Hz
 while True:
     # data = ser.read(1024)
     # print(data, flush=True)
-    time.sleep(0.5)
+    time.sleep(0.25)
 
-    ok = gps.update()
+    try:
+        ok = gps.update()
+    except Exception:
+        continue
+
     if not ok: # or gps.has_fix is False:
-        print("no data")
+        # print("no data")
+        continue
     else:
         print('=' * 40)  # Print a separator line.
         print("Fix:", gps.has_fix)
