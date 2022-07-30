@@ -15,7 +15,16 @@ try:
     import adafruit_dps310
 except ImportError:
     pass
-    
+
+try:
+    import adafruit_bmp3xx
+except ImportError:
+    pass
+
+try:
+    import adafruit_lps2x
+except ImportError:
+    pass
 
 class rtf_PT(Node):
     def __init__(self, name, i2c=None):
@@ -27,6 +36,7 @@ class rtf_PT(Node):
             self.i2c = i2c
 
         # rate = 1.0
+        self.sensor = None
 
         self.timer = self.create_timer(1.0, self.callback)
 
@@ -34,7 +44,7 @@ class rtf_PT(Node):
         # self.pub_pressure = self.create_publisher(FluidPressure, 'pressure', 10)
         self.pub_altitude = self.create_publisher(PointStamped, 'altitude', 10)
 
-        frame_id = self.declare_parameter('frame_id', "base_imu_link").value
+        self.frame_id = self.declare_parameter('frame_id', "base_altitude_link").value
 
         # self.temp_msg = Temperature()
         # self.temp_msg.header.frame_id = frame_id
@@ -59,6 +69,7 @@ class rtf_PT(Node):
 
         msg = PointStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
+        msg.header.frame_id = self.frame_id
         msg.point.x = 0.0
         msg.point.y = 0.0
         msg.point.z = 44330. * (1. - (p/p0)**(1./5.255) )
@@ -70,3 +81,17 @@ class rtf_dps310(rtf_PT):
         super().__init__('rtf_dps310', i2c)
 
         self.sensor = adafruit_dps310.DPS310(self.i2c)
+
+
+class rtf_bmp390(rtf_PT):
+    def __init__(self, i2c=None):
+        super().__init__('rtf_bmp390', i2c)
+
+        self.sensor = adafruit_bmp3xx.BMP3XX_I2C(self.i2c)
+
+
+class rtf_lps22(rtf_PT):
+    def __init__(self, i2c=None):
+        super().__init__('rtf_lps22', i2c)
+
+        self.sensor = adafruit_lps2x.LPS22(self.i2c)
