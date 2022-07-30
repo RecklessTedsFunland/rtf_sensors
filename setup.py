@@ -7,8 +7,7 @@ setup(
     version='0.0.0',
     packages=[package_name],
     data_files=[
-        ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+        ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=[
@@ -37,7 +36,8 @@ setup(
             'executor_st = rtf_sensors.examples.executor_st:main',
             'camera_ir = rtf_sensors.examples.sensors:camera_ir',
             'illumination = rtf_sensors.examples.sensors:illumination',
-            'i2c_cal_mag = rtf_sensors.imu_cal_mag_node:main'
+            'i2c_cal_mag = rtf_sensors.imu_cal_mag_node:main',
+            'lsm6sox_node = rtf_sensors.examples.nodes:main'
         ],
     },
 )

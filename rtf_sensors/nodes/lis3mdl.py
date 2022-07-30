@@ -4,16 +4,18 @@
 # Copyright (c) 2020 Kevin Walchko
 # see LICENSE for full details
 ##############################################
-
-
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import MagneticField
 # from colorama import Fore
 import board
 import busio
-import adafruit_lis3mdl
-from collections import deque
+try:
+    import adafruit_lis3mdl
+except ImportError:
+    # print("adafruit_lis3mdl not installed")
+    pass
+# from collections import deque
 
 
 class rtf_lis3mdl(Node):
@@ -38,24 +40,16 @@ class rtf_lis3mdl(Node):
         self.mag_msg = MagneticField()
         self.mag_msg.header.frame_id = frame_id
 
-        mc = 0.01
-        self.mag_msg.magnetic_field_covariance = [
-             mc, 0.0, 0.0,
-            0.0,  mc, 0.0,
-            0.0, 0.0,  mc
-        ]
-
-        self.calibrate = False
+        # mc = 0.01
+        # self.mag_msg.magnetic_field_covariance = [
+        #      mc, 0.0, 0.0,
+        #     0.0,  mc, 0.0,
+        #     0.0, 0.0,  mc
+        # ]
+        self.mag_msg.magnetic_field_covariance = [0.0]*9
 
     def callback(self):
         m = self.lis.magnetic
-
-        if self.calibrate:
-            msg = {
-                "timestamp": self.get_clock().now().nanoseconds*1e-9,
-                "m": m,
-            }
-            self.deque.append(msg)
 
         self.mag_msg.header.stamp = self.get_clock().now().to_msg()
         self.mag_msg.magnetic_field.x = m[0]
@@ -63,7 +57,3 @@ class rtf_lis3mdl(Node):
         self.mag_msg.magnetic_field.z = m[2]
 
         self.pub_mag.publish(self.mag_msg)
-
-    def enable_calibration(self):
-        self.calibrate = True
-        self.deque = deque()

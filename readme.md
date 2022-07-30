@@ -15,43 +15,47 @@ Here are some ROS2 drivers to publish Adafruit senor information:
 - Light
     - [bh1750](https://www.adafruit.com/product/4681)
 
-To help with development of the I2C ROS2 drivers, I use Adafruit's
-[MCP2221A](https://www.adafruit.com/product/4471) to develop on my laptop with.
-It works pretty good, but you can't get the same performance as a Raspberry Pi
-can talking to the sensors using native I2C interface.
+## Setup
 
-```
-import os
-if 'BLINKA_MCP2221' in os.environ.keys():
-    pass
-else:
-    os.environ['BLINKA_MCP2221'] = "1"
-```
+> **WARNING:** Don't use a virtualenv, ROS doesn't play nicely with those
+
+1. `pip install -U pip setuptools wheel`
+1. `pip install Adafruit-Blinka`
+1. `pip install adafruit-circuitpython-lsm6ds` (or any adafruit sensors you want)
+1. `pip install squaternion`
 
 Make sure the sensors are on the I2C bus:
 
 ```
-ubuntu@ros dotfiles $ sudo i2cdetect -y 1
+$ sudo apt install i2c-tools
+$ dotfiles $ sudo i2cdetect -y 1
      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-00:          -- -- -- -- -- -- -- -- -- -- -- -- -- 
+00:                         -- -- -- -- -- -- -- --
 10: -- -- -- -- -- -- -- -- -- -- -- -- 1c -- -- --
-20: -- -- -- 23 -- -- -- -- -- -- -- -- -- -- -- --
-30: -- -- -- 33 -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 50: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 60: -- -- -- -- -- -- -- -- -- -- 6a -- -- -- -- --
-70: -- -- -- -- -- -- -- 77   
+70: -- -- -- -- -- -- -- 77  
 ```
 
 ## To Build
 
 ```
 git clone https://github.com/RecklessTedsFunland/rtf_sensors.git
-colcon build --symlink-install --packages-select rtf_sensors
-source install/setup.bash
 
-# now run an example
-ros2 run rtf_sensors executor_st
+source /opt/ros/humble/setup.zsh
+
+colcon build --symlink-install --packages-select rtf_sensors
+
+source install/setup.bash
+```
+
+## Execute
+
+```bash
+ros2 run rtf_sensors lsm6sox_node
 ```
 
 ## Configuration Files
